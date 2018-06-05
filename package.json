@@ -8,7 +8,10 @@
     "test": "mocha server/**/*.test.js",
     "test-watch": "nodemon --exec \"npm test\""
   },
-  "author": "",
+  "engines": {
+    "node": "9.9.0"
+  },
+  "author": "Gaurav Verma",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
