@@ -3,8 +3,8 @@ const request = require('supertest');
 const {ObjectID} = require('mongodb');
 
 const {app} = require('./../server');
-const {Todo} = require('./../models/Todo');
-const {User} = require('./../models/User');
+const {Todo} = require('./../models/todo');
+const {User} = require('./../models/user');
 
 const todos = [{_id: new ObjectID(), text: 'First task to do'},
                {_id: new ObjectID(), text: 'Second task to do'}];
@@ -83,6 +83,42 @@ describe('GET /todos/:id', () => {
   it('should return a 404 when an invalid id is provided', (done) => {
     request(app)
       .get(`/todos/123`)
+      .expect(404)
+      .end(done);
+  });
+});
+
+describe('DELETE /todos/:id', () => {
+  it('should delete a todo', (done) => {
+    var hexID = todos[1]._id.toHexString();
+
+    request(app)
+      .delete(`/todos/${hexID}`)
+      .expect(200)
+      .expect((res) => {
+          expect(res.body.todo._id).toBe(hexID)
+      })
+      .end((err, res) => {
+        if(err){
+          return done(err);
+        }
+        Todo.findById(hexID).then((todo) => {
+          expect(todo).toBeFalsy();
+          done();
+        }).catch((e) => done(e));
+      })
+  });
+
+  it('should return a 404 if todo is not found', (done) => {
+    request(app)
+      .delete(`/todos/${(new ObjectID()).toHexString()}`)
+      .expect(404)
+      .end(done);
+  });
+
+  it('should return a 404 if object ID is not valid', (done) => {
+    request(app)
+      .delete(`/todos/123abc`)
       .expect(404)
       .end(done);
   });
