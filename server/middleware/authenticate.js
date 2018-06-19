@@ -10,7 +10,7 @@ var authenticate = (req, res, next) => {
     req.token = token;
     next();
   }).catch((error) => {
-    res.status(401).send('unauthorized');
+    res.status(401).send();
   });
 };
 
