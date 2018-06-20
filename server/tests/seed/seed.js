@@ -10,13 +10,15 @@ const userTwoId = new ObjectID();
 const todos = [
   {
     _id: new ObjectID(),
-    text: 'First task to do'
+    text: 'First task to do',
+    _creator: userOneId
   },
   {
     _id: new ObjectID(),
     text: 'Second task to do',
     completed: true,
-    completedAt: 333
+    completedAt: 333,
+    _creator: userTwoId
   }
 ];
 
@@ -37,7 +39,13 @@ const users = [
     _id: userTwoId,
     name: 'namita',
     email: 'namita@gmail.com',
-    password: 'password2'
+    password: 'password2',
+    tokens: [
+      {
+        access: 'auth',
+        token: jwt.sign({_id: userTwoId, access: 'auth'}, 'abc123').toString()
+      }
+    ]
   }
 ];
 
